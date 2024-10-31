@@ -12,6 +12,7 @@ type Usuarios struct {
 	Fecha_creado      	time.Time             	`json:"fecha_creado"`
 	Fecha_actualizado   time.Time               `json:"fecha_actualizado"`
 	Estado       		bool              		`json:"estado"`
+	Id_rol       		uint              		`json:"id_rol"`
 }
 
 func (Usuarios) TableName() string {

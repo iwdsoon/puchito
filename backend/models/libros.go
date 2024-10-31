@@ -16,12 +16,3 @@ type Libros struct {
 func (Libros) TableName() string {
 	return "libros"
 }
-
-type Generos struct {
-	ID              uint                	`json:"id" gorm:"primary_key"`
-	Genero      	string              	`json:"genero"`
-}
-
-func (Generos) TableName() string {
-	return "generos"
-}
