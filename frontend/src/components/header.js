@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 
-export const Header = ({ evento }) => {
+export const Header = () => {
     const location = useLocation();
     const [titulo, setTitulo] = useState('')
     const [icono, setIcono] = useState('');
@@ -12,8 +12,8 @@ export const Header = ({ evento }) => {
 
         switch (location.pathname) {
             case url:
-                setIcono("equalizer")
-                setTitulo("Dashboard")
+                setIcono("widgets")
+                setTitulo("Menu")
                 break;
             case url + "/usuarios":
                 setIcono("person");
@@ -24,12 +24,12 @@ export const Header = ({ evento }) => {
                 setTitulo("Generos");
             break;
             case url + "/libros":
-                setIcono("book");
+                setIcono("menu_book");
                 setTitulo("Libros");
             break;
             case url + "/prestamos":
-                setIcono("payments");
-                setTitulo(t("rates.rate"));
+                setIcono("store");
+                setTitulo("Prestamos");
             break;
         }
     },[location.pathname]);

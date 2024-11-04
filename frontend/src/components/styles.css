@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.menu{
+    font-family: "Inter", sans-serif;
+    background-color: #EDEDED;
+
+}
+
+.menu-header-info_evento{
+    flex: 1; /* Permite que el contenedor del texto ocupe el espacio restante */
+    overflow: hidden;
+}
+
+.menu-header-info_evento p{
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    white-space: nowrap;        
+    overflow: hidden;               
+    text-overflow: ellipsis;
+}
+
+.menu-header-info_evento small{
+    font-family: "Inter", sans-serif;
+    color: gray;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+.menu-body ul
+{
+
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.menu-body-item
+{
+    height: 35px;
+    margin-top: 5px;
+}
+
+.menu-body-item .link
+{
+    color: black !important;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-left: 10px;
+    gap: 7px
+}
+
+.menu-body-item p 
+{
+    font-family: "Inter", sans-serif;
+    margin-bottom: 0px;
+    font-size: 14px;
+}
+
+.dropdown_list{
+    font-family: "Inter", sans-serif;
+}
+.menu-body-item:hover
+{
+    background-color: rgb(211, 211, 211);
+}
+
+
+.dropdown_arrow {
+    transition: transform 0.3s ease;
+}
+
+.dropdown_arrow.open {
+    transform: rotate(180deg);
+}
+
+.dropdown_link{
+    cursor: pointer;
+    height: 35px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+.dropdown_link p{
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    margin: 0px;
+}
+.dropdown_link i{
+    font-size: 23px;
+}
+
+.button-offcanvas i{
+    font-size: 29px;
+}
+.menu-body-item.active {
+    background-color: #e3e1e1; 
+    border-left: 4px solid #272727; 
+    
+}

@@ -1,116 +1,150 @@
-import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Dropdown, DropdownButton } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import moment from 'moment-timezone';
+import {
+  Container,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+} from '@mui/material';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import VolverButton from '../components/VolverButton';
+import { api } from '../services/api';
+import CrearGenero from '../components/modales/CrearGenero';
+
 
 const Generos = () => {
+  const [state, setState] = useState({ showResult: false, apiMessage: "", error: null });
+  const history = useHistory();
   const [generos, setGeneros] = useState([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedGenero, setSelectedGenero] = useState(null);
-  const [newGenero, setNewGenero] = useState('');
-  
-  const handleAddGenero = () => {
-    const newId = generos.length ? generos[generos.length - 1].id + 1 : 1;
-    setGeneros([...generos, { id: newId, genero: newGenero }]);
-    setNewGenero('');
-    setShowAddModal(false);
+  const [pageSize] = useState(10);
+  const [showSearch, setShowSearch] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const formatFecha = (fecha) => {
+      return moment(fecha).clone().local().format("DD/MM/YY")
+  }
+
+  useEffect(() => {
+    const callApi = async () => {
+      try {
+        const response = await api.generos.getAll();
+        if (response.status === "success") {
+          setGeneros(response.data.generos || []);
+        } else {
+          setGeneros([]);
+        }
+      } catch (error) {
+        setState(prevState => ({
+          ...prevState,
+          error: "Error en la Red.",
+        }));
+      }
+    };
+
+    callApi();
+  }, []);
+
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar esta publicación?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await api.generos.delete(id);
+      if (response.status === "success") {
+        setGeneros(generos.filter((g) => g.id !== id));
+      }
+    } catch (error) {
+      setState(prevState => ({
+        ...prevState,
+        error: "Error al eliminar el genero.",
+      }));
+    }
   };
 
-  const handleEditGenero = () => {
-    setGeneros(generos.map(g => g.id === selectedGenero.id ? { ...g, genero: newGenero } : g));
-    setShowEditModal(false);
-  };
-
-  const handleDeleteGenero = () => {
-    setGeneros(generos.filter(g => g.id !== selectedGenero.id));
-    setShowDeleteModal(false);
+  const handleToggleSearch = () => {
+    setShowSearch(!showSearch);
+    if (showSearch) setQuery('');
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Generos</h2>
-      <Button variant="primary" onClick={() => setShowAddModal(true)}>Add Genero</Button>
+    <Container>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
 
-      <Table striped bordered hover className="mt-3">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Genero</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {generos.map(g => (
-            <tr key={g.id}>
-              <td>{g.id}</td>
-              <td>{g.genero}</td>
-              <td>
-                <DropdownButton id="dropdown-basic-button" title="...">
-                  <Dropdown.Item onClick={() => { setSelectedGenero(g); setNewGenero(g.genero); setShowEditModal(true); }}>Edit</Dropdown.Item>
-                  <Dropdown.Item onClick={() => { setSelectedGenero(g); setShowDeleteModal(true); }}>Delete</Dropdown.Item>
-                </DropdownButton>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      {/* Add Modal */}
-      <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Genero</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group controlId="formAddGenero">
-            <Form.Label>Genero</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter genero"
-              value={newGenero}
-              onChange={(e) => setNewGenero(e.target.value)}
+        {showSearch ? (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <TextField
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar.."
+              variant="outlined"
+              size="small"
             />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddModal(false)}>Cancel</Button>
-          <Button variant="primary" onClick={handleAddGenero}>Add</Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Edit Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Genero</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group controlId="formEditGenero">
-            <Form.Label>Genero</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Edit genero"
-              value={newGenero}
-              onChange={(e) => setNewGenero(e.target.value)}
+            <IconButton onClick={handleToggleSearch}>
+              <CloseOutlinedIcon />
+            </IconButton>
+          </div>
+        ) : (
+          <IconButton onClick={handleToggleSearch}>
+            <SearchOutlinedIcon />
+          </IconButton>
+        )}
+            <CrearGenero
+              generos={generos}
             />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
-          <Button variant="primary" onClick={handleEditGenero}>Save Changes</Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Delete Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this genero?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-          <Button variant="danger" onClick={handleDeleteGenero}>Delete</Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+      </div>
+        <>
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead sx={{ backgroundColor: "#EDEDED" }}>
+                <TableRow>
+                  <TableCell sx={{ fontFamily: 'Inter, sans-serif' }}>{"Id"}</TableCell>
+                  <TableCell sx={{ fontFamily: 'Inter, sans-serif' }}>{"Genero"}</TableCell>
+                  <TableCell sx={{ fontFamily: 'Inter, sans-serif' }} align="right">
+                    {"Acciones"}
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                  {generos.map((genero) => (
+                    <TableRow key={genero.id}>
+                      <TableCell sx={{ fontFamily: 'Inter, sans-serif' }}>{genero.id}</TableCell>
+                      <TableCell sx={{ fontFamily: 'Inter, sans-serif' }}>{genero.genero}</TableCell>
+{/*                    <TableCell sx={{ fontFamily: 'Inter, sans-serif' }}>{formatFecha(pub.desde)}</TableCell>
+                      <TableCell sx={{ fontFamily: 'Inter, sans-serif' }}>{formatFecha(pub.hasta)}</TableCell> */}
+                      <TableCell align="right">
+                        <IconButton
+                          sx={{ color: "red" }}
+                          onClick={() => handleDelete(genero.id)}
+                        >
+                          <DeleteForeverIcon sx={{ fontSize: "27px" }} />
+                        </IconButton>
+                        <CrearGenero
+                            generoId={genero.id}
+                            initialGenero={genero.genero}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1rem" }}>
+        <VolverButton />
+      </div>
+    </Container>
   );
 };
 

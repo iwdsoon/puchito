@@ -40,6 +40,20 @@ func GetAll(c echo.Context) error {
 	})
 }
 
+func Get(c echo.Context) error {
+	db := database.GetDb()
+	id := c.Param("id")
+
+	genero := new(models.Generos)
+	db.Raw(`SELECT * FROM puchito.generos WHERE id = ?`,id).First(&genero)
+
+	data := Data{Genero: genero}
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status: "success",
+		Data:   data,
+	})
+}
+
 type Genero struct {
 	Gender	string	`json:"genero"`
 }
