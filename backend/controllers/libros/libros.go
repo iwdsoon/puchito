@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"puchito/database"
 	"puchito/models"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -31,7 +32,7 @@ func GetAll(c echo.Context) error {
 
 	var libros []models.Libros
 
-	db.Raw(`SELECT * FROM puchito.libros`).Find(&libros)
+	db.Raw(`SELECT * FROM puchito.libros WHERE estado = true`).Find(&libros)
 
 	data := Data{Libros: libros}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -82,9 +83,9 @@ func Create(c echo.Context) error {
 
 func Set(c echo.Context) error{
 	db := database.GetDb()
-	genero := new(models.Generos)
+	libro := new(models.Libros)
 
-	if err := c.Bind(genero); err != nil {
+	if err := c.Bind(libro); err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "invalid request body " + err.Error(),
@@ -92,24 +93,24 @@ func Set(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	if err := db.Exec(`UPDATE puchito.libros SET genero = ? WHERE id = ?`, genero.Genero, c.Param("id")).Error; err != nil {
+	if err := db.Exec(`UPDATE puchito.libros SET nombre = ? , autor = ? , fecha_lanzamiento = ? , id_genero = ? , fecha_actualizado = ? WHERE id = ?`, libro.Nombre,libro.Autor,libro.Fecha_lanzamiento,libro.Id_genero, time.Now(), c.Param("id")).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
-			Message: "error editing gender " + err.Error(),
+			Message: "error editing book " + err.Error(),
 		}
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
 	return c.JSON(http.StatusOK, ResponseMessage{
 		Status: "success",
-		Message: "gender edited",
+		Message: "book edited",
 	})
 }
 
 func Delete(c echo.Context) error {
 	db := database.GetDb()
 
-	if err := db.Exec(`DELETE FROM puchito.libros WHERE id = ?`, c.Param("id")).Error; err != nil {
+	if err := db.Exec(`UPDATE puchito.libros SET estado = false WHERE id = ?`, c.Param("id")).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error deleting" + err.Error(),
