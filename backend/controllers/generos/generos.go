@@ -41,12 +41,12 @@ func GetAll(c echo.Context) error {
 }
 
 type Genero struct {
-	Genero	string	`json:"genero"`
+	Gender	string	`json:"genero"`
 }
 
 func Create(c echo.Context) error {
 	db := database.GetDb()
-	genero := new(Genero)
+	genero := new(models.Generos)
 
 	if err := c.Bind(genero); err != nil {
 		response := ResponseMessage{
@@ -56,7 +56,7 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	if err := db.Raw(`INSERT INTO 'generos' ('genero') values ("?")`, genero).Error; err != nil {
+	if err := db.Exec(`INSERT INTO puchito.libros (genero) values (?)`, genero.Genero).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error creating gender " + err.Error(),
@@ -69,3 +69,46 @@ func Create(c echo.Context) error {
 		Message: "gender created",
 	})
 }
+
+func Set(c echo.Context) error{
+	db := database.GetDb()
+	genero := new(models.Generos)
+
+	if err := c.Bind(genero); err != nil {
+		response := ResponseMessage{
+			Status: "error",
+			Message: "invalid request body " + err.Error(),
+		}
+		return c.JSON(http.StatusBadRequest,response)
+	}
+
+	if err := db.Exec(`UPDATE puchito.libros SET genero = ? WHERE id = ?`, genero.Genero, c.Param("id")).Error; err != nil {
+		response := ResponseMessage{
+			Status: "error",
+			Message: "error editing gender " + err.Error(),
+		}
+		return c.JSON(http.StatusBadRequest,response)
+	}
+
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status: "success",
+		Message: "gender edited",
+	})
+}
+
+func Delete(c echo.Context) error {
+	db := database.GetDb()
+
+	if err := db.Exec(`DELETE FROM puchito.libros WHERE id = ?`, c.Param("id")).Error; err != nil {
+		response := ResponseMessage{
+			Status: "error",
+			Message: "error deleting" + err.Error(),
+		}
+		return c.JSON(http.StatusBadRequest,response)
+	}
+	
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status: "success",
+		Message: "gender deleted",
+	})
+} 

@@ -3,6 +3,7 @@ package routes
 import (
 	rolesController "puchito/controllers/roles"
 	generosController "puchito/controllers/generos"
+	librosController "puchito/controllers/libros"
 
 	jwt "puchito/routes/middleware"
 
@@ -21,5 +22,11 @@ func InitRoutes(e *echo.Echo) {
 	//generos
 	b.GET("/generos", generosController.GetAll)
 	b.POST("/generos", generosController.Create)
+	b.PUT("/generos/:id", generosController.Set)
+	b.DELETE("/generos/:id", generosController.Delete)
+
+	//libros
+	b.GET("/libros", librosController.GetAll)
+	b.POST("/libros", librosController.Create)
 
 }
