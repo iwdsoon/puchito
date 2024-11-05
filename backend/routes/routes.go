@@ -47,6 +47,5 @@ func InitRoutes(e *echo.Echo) {
 	b.POST("/prestamos", prestamosController.Create)
 	b.GET("/prestamos/:id", prestamosController.Get)
 	b.PUT("/prestamos/:id", prestamosController.Set)
-	b.DELETE("/prestamos/:id", prestamosController.Delete)
 
 }

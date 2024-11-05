@@ -31,7 +31,7 @@ func GetAll(c echo.Context) error {
 
 	var generos []models.Generos
 
-	db.Raw(`SELECT * FROM puchito.generos`).Find(&generos)
+	db.Exec(`SELECT * FROM puchito.generos`).Find(&generos)
 
 	data := Data{Generos: generos}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -45,7 +45,7 @@ func Get(c echo.Context) error {
 	id := c.Param("id")
 
 	genero := new(models.Generos)
-	db.Raw(`SELECT * FROM puchito.generos WHERE id = ?`,id).First(&genero)
+	db.Exec(`SELECT * FROM puchito.generos WHERE id = ?`,id).First(&genero)
 
 	data := Data{Genero: genero}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -70,7 +70,7 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	if err := db.Exec(`INSERT INTO puchito.libros (genero) values (?)`, genero.Genero).Error; err != nil {
+	if err := db.Exec(`INSERT INTO puchito.generos (genero) values (?)`, genero.Genero).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error creating gender " + err.Error(),
@@ -96,7 +96,7 @@ func Set(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	if err := db.Exec(`UPDATE puchito.libros SET genero = ? WHERE id = ?`, genero.Genero, c.Param("id")).Error; err != nil {
+	if err := db.Exec(`UPDATE puchito.generos SET genero = ? WHERE id = ?`, genero.Genero, c.Param("id")).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error editing gender " + err.Error(),
@@ -113,7 +113,7 @@ func Set(c echo.Context) error{
 func Delete(c echo.Context) error {
 	db := database.GetDb()
 
-	if err := db.Exec(`DELETE FROM puchito.libros WHERE id = ?`, c.Param("id")).Error; err != nil {
+	if err := db.Exec(`DELETE FROM puchito.generos WHERE id = ?`, c.Param("id")).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error deleting" + err.Error(),

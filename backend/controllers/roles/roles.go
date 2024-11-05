@@ -31,7 +31,7 @@ func GetAll(c echo.Context) error {
 
 	var roles []models.Roles
 
-	db.Raw(`SELECT * FROM puchito.roles`).Find(&roles)
+	db.Exec(`SELECT * FROM puchito.roles`).Find(&roles)
 
 	data := Data{Roles: roles}
 	return c.JSON(http.StatusOK, ResponseMessage{

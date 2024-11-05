@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { api } from '../../services/api'; 
 import { grey } from '@mui/material/colors';
-import { Button, Box, Modal, TextField, Alert } from '@mui/material';
+import { Button, Box, Modal, TextField, Alert, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import {
-    TextField,
-    IconButton,
-  } from '@mui/material';
+
 
 const EditarGenero = ({ generoId, initialGenero }) => {
   const [genero, setGenero] = useState(initialGenero || '');
@@ -23,7 +20,12 @@ const EditarGenero = ({ generoId, initialGenero }) => {
       return;
     }
     try {
-      const response = await api.generos.update(generoId, { genero });
+
+      let data = {
+        genero: genero
+      }
+
+      const response = await api.generos.update(generoId, data);
       if (response.status === 'success') {
         setError(false);
         setErrorMessage('');

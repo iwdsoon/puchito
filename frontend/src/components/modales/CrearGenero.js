@@ -11,14 +11,19 @@ const CrearGenero = () => {
   const [errorMessage , setErrorMessage] = useState("");
   const [enviado, setEnviado] = useState(false);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (genero.trim() === '') {
       setError(true);
-      setErrorMessage(<>{"Campo vacio"}</>);
+      setErrorMessage(<>{"Campo vacio"}</>)
+    }
       try {
-        const response = await api.generos.create(genero);
+
+        let data = {
+          genero: genero
+        }
+        
+        const response = await api.generos.create(data);
         if (response.status === "success") {
           setError(false)
           setErrorMessage("")
@@ -33,7 +38,7 @@ const CrearGenero = () => {
           setError(false)
           setErrorMessage("")
       }
-    }
+    
   };
 
   const [open, setOpen] = React.useState(false);

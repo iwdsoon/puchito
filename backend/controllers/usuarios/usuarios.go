@@ -31,7 +31,7 @@ func GetAll(c echo.Context) error {
 
 	var usuarios []models.Usuarios
 
-	db.Raw(`SELECT * FROM puchito.usuarios WHERE estado = true`).Find(&usuarios)
+	db.Exec(`SELECT * FROM puchito.usuarios WHERE estado = true`).Find(&usuarios)
 
 	data := Data{Usuarios: usuarios}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -45,7 +45,7 @@ func Get(c echo.Context) error {
 	id := c.Param("id")
 
 	usuario := new(models.Usuarios)
-	db.Raw(`SELECT * FROM puchito.usuarios WHERE id = ?`,id).First(&usuario)
+	db.Exec(`SELECT * FROM puchito.usuarios WHERE id = ?`,id).First(&usuario)
 
 	data := Data{Usuario: usuario}
 	return c.JSON(http.StatusOK, ResponseMessage{

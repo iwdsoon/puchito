@@ -3,36 +3,29 @@ import { useState, useEffect } from "react";
 import { api } from "../../services/api";
 import { Header } from "../../components/Header";
 
-
 export const Layout = ({ children }) => {
-  const [state, setState] = useState({
-    showResult: false,
-    apiMessage: "",
-    error: null
-  });
+
   const [usuario, setUsuario] = useState();
- 
+  const [state, setState] = useState({ showResult: false, apiMessage: "", error: null });
 
 
   useEffect(() => {
     const callApi = async () => {
-      try {
-        const response = await api.usuarios.get(1);
-        if (response.status === "success") {
-          const data = response.data.usuario;
-          setUsuario(data);
-          return data;
-        }
-      } catch (error) {
-        setState({
-          ...state,
-          error: "Error en la Red.",
-        });
+    try {
+      const response = await api.usuarios.get(1);
+      if (response.status === "success") {
+        const data = response.data.usuario;
+        setUsuario(data);
       }
-    };
-    callApi();
-  }, []);
-
+    } catch (error) {
+      setState(prevState => ({
+        ...prevState,
+        error: "Error en la Red.",
+      }));
+    }
+  }
+  callApi();
+}, []);
 
   return (
     <>

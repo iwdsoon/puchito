@@ -19,6 +19,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import VolverButton from '../components/VolverButton';
 import { api } from '../services/api';
 import CrearGenero from '../components/modales/CrearGenero';
+import EditarGenero from '../components/modales/EditarGenero';
 
 
 const Generos = () => {
@@ -130,7 +131,7 @@ const Generos = () => {
                         >
                           <DeleteForeverIcon sx={{ fontSize: "27px" }} />
                         </IconButton>
-                        <CrearGenero
+                        <EditarGenero
                             generoId={genero.id}
                             initialGenero={genero.genero}
                         />

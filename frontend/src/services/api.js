@@ -36,108 +36,108 @@ export const api = {
 
   usuarios: {
     async create(data) {
-      const response = await fetch(apiOrigin + '/usuarios', publicOptions('POST', data));
+      const response = await fetch(publicOrigin + '/usuarios', publicOptions('POST', data));
       const res = await response.json();
       return res
     },
-    async edit(data, id) {
-        const response = await fetch(apiOrigin + '/usuarios' +id, publicOptions('PUT', data));
+    async update(id, data) {
+        const response = await fetch(publicOrigin + '/usuarios/' +id, publicOptions('PUT', data));
         const res = await response.json();
         return res
       },
     async get(id) {
-        const response = await fetch(apiOrigin + '/usuarios' +id, publicOptions('GET', id));
+        const response = await fetch(publicOrigin + '/usuarios/' +id, publicOptions('GET'));
         const res = await response.json();
         return res
       },
     async getAll() {
-        const response = await fetch(apiOrigin + '/usuarios', publicOptions('GET'));
+        const response = await fetch(publicOrigin + '/usuarios', publicOptions('GET'));
         const res = await response.json();
         return res
       },
       async delete(id) {
-        const response = await fetch(apiOrigin + '/usuarios' +id, publicOptions('DELETE'));
+        const response = await fetch(publicOrigin + '/usuarios/' +id, publicOptions('DELETE'));
         const res = await response.json();
         return res
       }, 
   },
   generos: {
     async create(data) {
-      const response = await fetch(apiOrigin + '/generos', publicOptions('POST', data));
+      const response = await fetch(publicOrigin + '/generos', publicOptions('POST', data));
       const res = await response.json();
       return res
     },
-    async edit(data, id) {
-        const response = await fetch(apiOrigin + '/generos' +id, publicOptions('PUT', data));
+    async update(id, data) {
+        const response = await fetch(publicOrigin + '/generos/' +id, publicOptions('PUT', data));
         const res = await response.json();
         return res
       },
     async get(id) {
-        const response = await fetch(apiOrigin + '/generos' +id, publicOptions('GET', id));
+        const response = await fetch(publicOrigin + '/generos/' +id, publicOptions('GET'));
         const res = await response.json();
         return res
       },
     async getAll() {
-        const response = await fetch(apiOrigin + '/generos', publicOptions('GET'));
+        const response = await fetch(publicOrigin + '/generos', publicOptions('GET'));
         const res = await response.json();
         return res
       },
       async delete(id) {
-        const response = await fetch(apiOrigin + '/generos' +id, publicOptions('DELETE'));
+        const response = await fetch(publicOrigin + '/generos/' +id, publicOptions('DELETE'));
         const res = await response.json();
         return res
       }, 
   },
   libros: {
     async create(data) {
-      const response = await fetch(apiOrigin + '/libros', publicOptions('POST', data));
+      const response = await fetch(publicOrigin + '/libros', publicOptions('POST', data));
       const res = await response.json();
       return res
     },
-    async edit(data, id) {
-        const response = await fetch(apiOrigin + '/libros' +id, publicOptions('PUT', data));
+    async update(id, data) {
+        const response = await fetch(publicOrigin + '/libros/' +id, publicOptions('PUT', data));
         const res = await response.json();
         return res
       },
     async get(id) {
-        const response = await fetch(apiOrigin + '/libros' +id, publicOptions('GET', id));
+        const response = await fetch(publicOrigin + '/libros/' +id, publicOptions('GET'));
         const res = await response.json();
         return res
       },
     async getAll() {
-        const response = await fetch(apiOrigin + '/libros', publicOptions('GET'));
+        const response = await fetch(publicOrigin + '/libros', publicOptions('GET'));
         const res = await response.json();
         return res
       },
       async delete(id) {
-        const response = await fetch(apiOrigin + '/libros' +id, publicOptions('DELETE'));
+        const response = await fetch(publicOrigin + '/libros/' +id, publicOptions('DELETE'));
         const res = await response.json();
         return res
       }, 
   },
   prestamos: {
     async create(data) {
-      const response = await fetch(apiOrigin + '/prestamos', publicOptions('POST', data));
+      const response = await fetch(publicOrigin + '/prestamos', publicOptions('POST', data));
       const res = await response.json();
       return res
     },
-    async edit(data, id) {
-        const response = await fetch(apiOrigin + '/prestamos' +id, publicOptions('PUT', data));
+    async update(id, data) {
+        const response = await fetch(publicOrigin + '/prestamos/' +id, publicOptions('PUT', data));
         const res = await response.json();
         return res
       },
     async get(id) {
-        const response = await fetch(apiOrigin + '/prestamos' +id, publicOptions('GET', id));
+        const response = await fetch(publicOrigin + '/prestamos/' +id, publicOptions('GET'));
         const res = await response.json();
         return res
       },
     async getAll() {
-        const response = await fetch(apiOrigin + '/prestamos', publicOptions('GET'));
+        const response = await fetch(publicOrigin + '/prestamos', publicOptions('GET'));
         const res = await response.json();
         return res
       },
       async delete(id) {
-        const response = await fetch(apiOrigin + '/prestamos' +id, publicOptions('DELETE'));
+        const response = await fetch(publicOrigin + '/prestamos/' +id, publicOptions('DELETE'));
         const res = await response.json();
         return res
       }, 
