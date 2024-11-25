@@ -21,17 +21,10 @@ type ResponseMessage struct {
 
 func GetAll(c echo.Context) error {
 	db := database.GetDb()
-
-	//Order By
-	if c.QueryParam("sortField") != "" {
-		db = db.Order(c.QueryParam("sortField") + " " + c.QueryParam("sortOrder"))
-	} else {
-		db = db.Order("id")
-	}
-
+	
 	var generos []models.Generos
 
-	db.Raw(`SELECT * FROM puchito.generos`).Find(&generos)
+	db.Raw(`SELECT * FROM puchito.generos ORDER BY id`).Find(&generos)
 
 	data := Data{Generos: generos}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -70,8 +63,7 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	var Idgenero uint
-	if err := db.Exec(`INSERT INTO puchito.generos (genero) values (?) RETURNING ID`, genero.Genero).Scan(&Idgenero).Error; err != nil {
+	if err := db.Exec(`INSERT INTO puchito.generos (genero) values (?)`, genero.Genero).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error creating gender " + err.Error(),
@@ -79,7 +71,9 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	genero.ID = Idgenero
+	var Idgenero uint
+	db.Raw(`SELECT LAST_INSERT_ID()`).First(&Idgenero)
+	db.Raw(`SELECT * FROM puchito.generos WHERE id = ?`,Idgenero).First(&genero)
 
 	data := Data{Genero: genero}
 	return c.JSON(http.StatusOK, ResponseMessage{

@@ -21,17 +21,10 @@ type ResponseMessage struct {
 
 func GetAll(c echo.Context) error {
 	db := database.GetDb()
-
-	//Order By
-	if c.QueryParam("sortField") != "" {
-		db = db.Order(c.QueryParam("sortField") + " " + c.QueryParam("sortOrder"))
-	} else {
-		db = db.Order("id")
-	}
-
+	
 	var roles []models.Roles
 
-	db.Raw(`SELECT * FROM puchito.roles`).Find(&roles)
+	db.Raw(`SELECT * FROM puchito.roles ORDER BY id`).Find(&roles)
 
 	data := Data{Roles: roles}
 	return c.JSON(http.StatusOK, ResponseMessage{

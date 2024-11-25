@@ -20,19 +20,13 @@ type ResponseMessage struct {
 	Message string `json:"message,omitempty"`
 }
 
+
 func GetAll(c echo.Context) error {
 	db := database.GetDb()
-
-	//Order By
-	if c.QueryParam("sortField") != "" {
-		db = db.Order(c.QueryParam("sortField") + " " + c.QueryParam("sortOrder"))
-	} else {
-		db = db.Order("id")
-	}
-
+	
 	var libros []models.Libros
 
-	db.Raw(`SELECT * FROM puchito.libros WHERE estado = true`).Find(&libros)
+	db.Raw(`SELECT * FROM puchito.libros ORDER BY id`).Find(&libros)
 
 	data := Data{Libros: libros}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -67,17 +61,23 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	if err := db.Exec(`INSERT INTO puchito.libros (nombre,autor,fecha_lanzamiento,id_genero) values (?,?,?,?)`, libro.Nombre,libro.Autor,libro.Fecha_creado,libro.Id_genero).Error; err != nil {
+	if err := db.Exec(`INSERT INTO puchito.libros (nombre,autor,fecha_lanzamiento,id_genero) values (?,?,?,?)`, libro.Nombre,libro.Autor,libro.Fecha_lanzamiento,libro.Id_genero).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
-			Message: "error creating gender " + err.Error(),
+			Message: "error creating book " + err.Error(),
 		}
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
+	var Idlibro uint
+	db.Raw(`SELECT LAST_INSERT_ID()`).First(&Idlibro)
+	db.Raw(`SELECT * FROM puchito.libros WHERE id = ?`,Idlibro).First(&libro)
+	
+	data := Data{Libro: libro}
 	return c.JSON(http.StatusOK, ResponseMessage{
 		Status: "success",
-		Message: "gender created",
+		Data: data,
+		Message: "book created",
 	})
 }
 
@@ -120,6 +120,6 @@ func Delete(c echo.Context) error {
 	
 	return c.JSON(http.StatusOK, ResponseMessage{
 		Status: "success",
-		Message: "gender deleted",
+		Message: "book deleted",
 	})
 } 
