@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import moment from 'moment-timezone';
+//import moment from 'moment-timezone';
 import {
   Container,
   TextField,
@@ -23,34 +22,25 @@ import EditarGenero from '../components/modales/EditarGenero';
 
 
 const Generos = () => {
-  const [state, setState] = useState({ showResult: false, apiMessage: "", error: null });
-  const history = useHistory();
   const [generos, setGeneros] = useState([]);
-  const [pageSize] = useState(10);
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
 
-  const formatFecha = (fecha) => {
+/*   const formatFecha = (fecha) => {
       return moment(fecha).clone().local().format("DD/MM/YY")
-  }
+  } */
 
   useEffect(() => {
     const callApi = async () => {
       try {
         const response = await api.generos.getAll();
         if (response.status === "success") {
-          setGeneros(response.data.generos || []);
-        } else {
-          setGeneros([]);
+          setGeneros(response.data.generos);
         }
       } catch (error) {
-        setState(prevState => ({
-          ...prevState,
-          error: "Error en la Red.",
-        }));
+        console.error(error.message)
       }
-    };
-
+    }
     callApi();
   }, []);
 
@@ -67,10 +57,7 @@ const Generos = () => {
         setGeneros(generos.filter((g) => g.id !== id));
       }
     } catch (error) {
-      setState(prevState => ({
-        ...prevState,
-        error: "Error al eliminar el genero.",
-      }));
+      console.error(error.message)
     }
   };
 
@@ -78,6 +65,10 @@ const Generos = () => {
     setShowSearch(!showSearch);
     if (showSearch) setQuery('');
   };
+  
+  const handleCreate = (newGenero) =>{
+    setGeneros((prevGeneros) => [...prevGeneros, newGenero])
+  }
 
   return (
     <Container>
@@ -102,7 +93,7 @@ const Generos = () => {
           </IconButton>
         )}
             <CrearGenero
-              generos={generos}
+              handleCreate={handleCreate}
             />
       </div>
         <>

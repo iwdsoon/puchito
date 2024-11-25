@@ -32,7 +32,7 @@ func GetAll(c echo.Context) error {
 
 	var prestamos []models.Prestamos
 
-	db.Exec(`SELECT * FROM puchito.prestamos`).Find(&prestamos)
+	db.Raw(`SELECT * FROM puchito.prestamos`).Find(&prestamos)
 
 	data := Data{Prestamos: prestamos}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -46,7 +46,7 @@ func Get(c echo.Context) error {
 	id := c.Param("id")
 
 	prestamo := new(models.Prestamos)
-	db.Exec(`SELECT * FROM puchito.prestamos WHERE id = ?`,id).First(&prestamo)
+	db.Raw(`SELECT * FROM puchito.prestamos WHERE id = ?`,id).First(&prestamo)
 
 	data := Data{Prestamo: prestamo}
 	return c.JSON(http.StatusOK, ResponseMessage{

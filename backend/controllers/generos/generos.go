@@ -31,7 +31,7 @@ func GetAll(c echo.Context) error {
 
 	var generos []models.Generos
 
-	db.Exec(`SELECT * FROM puchito.generos`).Find(&generos)
+	db.Raw(`SELECT * FROM puchito.generos`).Find(&generos)
 
 	data := Data{Generos: generos}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -45,7 +45,7 @@ func Get(c echo.Context) error {
 	id := c.Param("id")
 
 	genero := new(models.Generos)
-	db.Exec(`SELECT * FROM puchito.generos WHERE id = ?`,id).First(&genero)
+	db.Raw(`SELECT * FROM puchito.generos WHERE id = ?`,id).First(&genero)
 
 	data := Data{Genero: genero}
 	return c.JSON(http.StatusOK, ResponseMessage{
@@ -70,7 +70,8 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
-	if err := db.Exec(`INSERT INTO puchito.generos (genero) values (?)`, genero.Genero).Error; err != nil {
+	var Idgenero uint
+	if err := db.Exec(`INSERT INTO puchito.generos (genero) values (?) RETURNING ID`, genero.Genero).Scan(&Idgenero).Error; err != nil {
 		response := ResponseMessage{
 			Status: "error",
 			Message: "error creating gender " + err.Error(),
@@ -78,8 +79,12 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest,response)
 	}
 
+	genero.ID = Idgenero
+
+	data := Data{Genero: genero}
 	return c.JSON(http.StatusOK, ResponseMessage{
 		Status: "success",
+		Data: data,
 		Message: "gender created",
 	})
 }

@@ -5,7 +5,7 @@ import { Button, Box, Modal, TextField, Alert} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
-const CrearGenero = () => {
+const CrearGenero = ({handleCreate}) => {
   const [genero, setGenero] = useState('');
   const [error, setError] = useState(false);
   const [errorMessage , setErrorMessage] = useState("");
@@ -28,6 +28,7 @@ const CrearGenero = () => {
           setError(false)
           setErrorMessage("")
           setEnviado(true)
+          handleCreate(response.data)
           setTimeout(() => {
             handleClose();
           }, 2000);

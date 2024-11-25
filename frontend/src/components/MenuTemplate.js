@@ -1,6 +1,4 @@
-import { useContext, useEffect, useState } from "react";
 import { Link, useLocation} from "react-router-dom";
-import { PaginatorContext } from "../providers/Paginator";
 import "./styles.css";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import StoreIcon from '@mui/icons-material/Store';
